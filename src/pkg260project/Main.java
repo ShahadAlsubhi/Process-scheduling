@@ -17,7 +17,8 @@ public class Main {
         int quantum = scanner.nextInt();
         
         //queue data structure to represent the Process Control Block (PCB).
-        Process[] processes = new Process[nProcess];
+        //Process[] processes = new Process[nProcess];
+        Queue <Process> readyQueue = new LinkedList<>();
         
         //loop to fill several processes arriving at certain time with burst time, in the queue.
         for (int i = 0; i < nProcess; i++) {
@@ -28,7 +29,8 @@ public class Main {
             int arrivalTime = scanner.nextInt();
             System.out.print("Burst Time: ");
             int burstTime = scanner.nextInt();
-            processes[i] = new Process(name, arrivalTime, burstTime);
+            //processes[i] = new Process(name, arrivalTime, burstTime);
+            readyQueue.add(new Process(name, arrivalTime, burstTime));
         }
         
         
@@ -38,5 +40,22 @@ public class Main {
         //method to display the results or we just do it here in the main 
         
     }
+    //  Method to calculate turnaround time of a process
+    public static int CalculateTurnaround(int completionTime, Process currentProcess){
+        int turnaround = completionTime - currentProcess.getArrivalTime();
+        currentProcess.setTurnaroundTime(turnaround);
+        return turnaround;
+    }
+   
+    //  Method to calculate waiting time of a process
+    public static int CalculateWaiting(Process currentProcess){
+        int waiting = currentProcess.getTurnaroundTime() - currentProcess.getBurstTime();
+        currentProcess.setWaitingTime(waiting);
+        return waiting;
+    }
     
+    // Method for printing results
+    public static void printResult(Process currentProcess){
+        System.out.println("Process: " + currentProcess.getName() + "\n Waiting time: " + currentProcess.getWaitingTime() + "\n Turnaround time: " + currentProcess.getTurnaroundTime() + "\n Response time: " + currentProcess.getResponseTime());
+    }
 }
