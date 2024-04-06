@@ -9,7 +9,8 @@ public class Process {
     private int turnaroundTime;
     private int responseTime;
     int remainingTime;
-    
+
+
     Process(String name, int arrivalTime, int burstTime) {
         this.name = name;
         this.arrivalTime = arrivalTime;

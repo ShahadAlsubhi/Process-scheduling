@@ -36,10 +36,55 @@ public class Main {
         
         
         //call the round robin method and send the process queue, time quantum
-        
-        //method to display the results or we just do it here in the main 
-        
+        // Call the roundRobin method to perform scheduling
+        roundRobin(readyQueue, quantum);
     }
+
+    // Implement the Round-Robin scheduling algorithm
+    public static void roundRobin(Queue<Process> readyQueue, int quantum) {
+        Queue<Process> waitingQueue = new LinkedList<>();
+        int currentTime = 0;
+        int totalTime = 0;
+
+        // Continue until all processes are executed
+        while (!readyQueue.isEmpty() || !waitingQueue.isEmpty()) {
+            if (!readyQueue.isEmpty()) {
+                Process currentProcess = readyQueue.poll();
+                if (currentProcess.getBurstTime() > quantum) {
+                    // If burst time is greater than quantum, execute for quantum time
+                    currentProcess.setResponseTime(Math.max(currentTime, currentProcess.getArrivalTime()));
+                    currentTime += quantum;
+                    currentProcess.setBurstTime(currentProcess.getBurstTime() - quantum);
+                    while (!readyQueue.isEmpty() && readyQueue.peek().getArrivalTime() <= currentTime) {
+                        waitingQueue.add(readyQueue.poll());
+                    }
+                    waitingQueue.add(currentProcess);
+                } else {
+                    // If burst time is less than or equal to quantum, execute fully
+                    currentProcess.setResponseTime(Math.max(currentTime, currentProcess.getArrivalTime()));
+                    currentTime += currentProcess.getBurstTime();
+                    currentProcess.setBurstTime(0);
+                    currentProcess.setTurnaroundTime(currentTime - currentProcess.getArrivalTime());
+                    currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
+                    printResult(currentProcess);
+                    totalTime += currentProcess.getTurnaroundTime();
+                }
+            } else {
+                // If no process in ready queue, execute from waiting queue
+                Process currentProcess = waitingQueue.poll();
+                currentTime += currentProcess.getBurstTime();
+                currentProcess.setBurstTime(0);
+                currentProcess.setTurnaroundTime(currentTime - currentProcess.getArrivalTime());
+                currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
+                printResult(currentProcess);
+                totalTime += currentProcess.getTurnaroundTime();
+            }
+        }
+
+    }
+    //method to display the results or we just do it here in the main
+        
+
     //  Method to calculate turnaround time of a process
     public static int CalculateTurnaround(int completionTime, Process currentProcess){
         int turnaround = completionTime - currentProcess.getArrivalTime();
