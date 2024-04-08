@@ -17,8 +17,8 @@ public class Process {
         this.burstTime = burstTime;
         this.waitingTime = 0;
         this.turnaroundTime = 0;
-        this.responseTime = 0;
-        this.remainingTime = 0;
+        this.responseTime = -1;
+        this.remainingTime = burstTime;
     }
 
     /**
@@ -99,10 +99,23 @@ public class Process {
     }
 
     /**
-     * @param responseTime the responseTime to set
+     * @param ResponseTime
      */
-    public void setResponseTime(int responseTime) {
-        this.responseTime = responseTime;
+    public void setResponseTime(int ResponseTime) {
+        if (responseTime == -1){
+            responseTime = ResponseTime;
+        }
+    }
+    
+    public int getRemainingTime() {
+        return remainingTime;
+    }
+
+    /**
+     * @param remainingTime
+     */
+    public void setRemainingTime(int remainingTime) {
+        this.remainingTime = remainingTime;
     }
     
     
